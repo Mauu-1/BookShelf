@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Books</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="styles/main.css" rel="stylesheet" />
+    
+</head>
+<body>
+  
+  <div class="d-flex flex-row">  <div class="sticky ">  <%- include("partials/sideBar.ejs",{books: books}) %> 
+    </div>
+    <div class="book-total">
+      <p class="total-text">
+        Read books</p>
+      <div class="circle">
+        <p class="total-count"><%= books.length %></p>
+      </div>
+    </div>
+<div class="container">
+  
+    <div class="main-content overflow-auto">
+      <div class="container">
+        <section class="py-5 text-center container">
+          <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <h1 class="fw-light">My book Reviews</h1>
+              <p class="lead text-body-secondary">Discover a world of literature through their eyes, as they share their thoughts, reflections, and recommendations on the books that have left a mark. Whether you're seeking inspiration or simply a new adventure between the pages, you're sure to find something captivating here.</p>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Filtered by: <%= selection %>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <form action="/filter" method="post">
+                  <button name="choice" value="rating" class="dropdown-item" type="submit">Rating</button>
+                  <button name="choice" value="readDate" class="dropdown-item" type="submit">Read Date</button>
+                  <button name="choice" value="title" class="dropdown-item" type="submit">Title</button>
+                </form>
+                </div>
+              </div>
+              
+
+              
+            </div>
+          </div>
+        </section>
+        
+        <div class="album py-5 bg-body-tertiary">
+          <div class="container">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3">
+           
+              
+             <% if (books.length > 0) { %>
+              <% books.forEach(book => { %>
+                        <div class="col">
+                    <div class="card ">
+                      <% if (book.img_url) { %>
+                        <img src="<%= book.img_url %>" class="card-img-top" alt="<%= book.title %>">
+                      <% } else { %>
+                        <p>Image not available</p>
+                      <% } %>
+                     
+                      <div class="card-body">
+                        <p class="card-text"><span>Title:</span>  <%= book.title %></p>
+                        <p class="card-text"><span>Author:</span>  <%= book.author %></p>
+                        <p class="card-text"><span>Description:</span> <%= book.description %></p>
+                        <small class="text-body-secondary">Book Rating: <%= book.rating %>/5 ⭐</small>
+                        <div class="mt-2 d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="btn-group">
+                              <form  action="/book" method="post">
+                                <input type="hidden" name="selectedBook" value="<%= book.bookid %>">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">View</button>
+                              </form>
+                              <form  action="/edit" method="post">
+                                <input type="hidden" name="selectedBook" value="<%= book.bookid %>">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Edit</button>
+                              </form>
+                              <form  action="/delete" method="post">
+                                <input type="hidden" name="selectedBook" value="<%= book.bookid %>">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>
+                              </form>
+                              
+                            </div>
+                            <% const date = new Date(book.date_read); %>
+                            <% const day = date.getDate().toString().padStart(2, '0');%> 
+                            <%  const month = (date.getMonth() + 1).toString().padStart(2, '0'); %>
+                            <% const year = date.getFullYear(); %>
+                            <div class="layout">
+                            <small class=" text-body-secondary">Read Date:</small>
+                            <small class=" text-body-secondary"><%= day + "/" + month +"/"+year %></small>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>  
+                  <%  }); %>
+           <%  } else { %>
+            <div class="p-container"><p class="centered-p">No books Added Yet</p></div>
+            <div class="stack">
+              <div class="no-books">
+              <div class="book"></div>
+              <div class="book"></div>  
+              <div class="book"></div>
+              <div class="book"></div>  
+              <div class="book"></div>  
+            </div>
+            </div>
+            <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
+
+
+  
+
+</body>
+</html>
